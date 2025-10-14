@@ -1,0 +1,58 @@
+<script src="https://sdk.minepi.com/v2/sdk.js"></script>
+<script>
+    // Pi SDK 초기화 (Testnet 모드)
+    Pi.init({ version: "2.0", sandbox: true });
+
+    // 결제 요청 함수
+    function makePiPayment() {
+        const paymentData = {
+            amount: 1, // 테스트 결제 금액은 1 Test-Pi
+            memo: "Kedheon Fanlink 10단계 최종 테스트", // 메모
+            metadata: { app_name: "Kedheon Fanlink" } // 앱 이름 메타데이터
+        };
+
+        const onPaymentCompleted = (payment) => {
+            alert("✅ 10단계 결제 성공! Checklist로 돌아가 완료 확인.");
+        };
+
+        const onPaymentCancelled = (payment) => {
+            alert("❌ 결제 취소됨. 다시 시도하십시오.");
+        };
+
+        const onPaymentError = (error) => {
+            alert("⚠️ 결제 오류 발생: " + error.message);
+            // Pi SDK가 올바르게 로드되지 않았을 가능성이 있습니다.
+        };
+
+        Pi.requestPayment(paymentData, onPaymentCompleted, onPaymentCancelled, onPaymentError);
+    }
+</script>
+
+<div style="text-align: center; padding: 50px; font-family: sans-serif;">
+    <h1>Kedheon Fanlink 10단계 최종 테스트 (GitHub Pages)</h1>
+    <p>Pi 사용자 인증 상태: <span id="authStatus">인증 대기 중...</span></p>
+    <button id="paymentButton" onclick="makePiPayment()" style="padding: 15px 30px; font-size: 20px; background-color: #ff5722; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px;">
+        10단계 테스트 결제 (1 Test-Pi)
+    </button>
+    <p style="color: gray; margin-top: 15px;">이 버튼은 Pi Browser에서 Pi 계정 인증 후 활성화됩니다.</p>
+</div>
+
+<script>
+    // Pi 사용자 인증 상태 확인 및 버튼 활성화
+    Pi.authenticate(["username", "payments"], (auth) => {
+        const authStatusElement = document.getElementById("authStatus");
+        const paymentButton = document.getElementById("paymentButton");
+        if (auth && auth.user) {
+            authStatusElement.textContent = `✅ Pi 사용자: ${auth.user.username} (로그인됨)`;
+            paymentButton.disabled = false;
+            paymentButton.style.cursor = 'pointer';
+        } else {
+            authStatusElement.textContent = `❌ Pi 사용자 인증 실패. Pi Browser에서 접속해야 합니다.`;
+            paymentButton.disabled = true;
+            paymentButton.style.cursor = 'not-allowed';
+        }
+    });
+
+    // 버튼 초기 상태 비활성화
+    document.getElementById("paymentButton").disabled = true;
+</script>
