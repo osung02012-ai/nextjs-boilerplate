@@ -1,8 +1,10 @@
+
+
 'use client'; 
 
 import Script from 'next/script';
 
-// **수정 사항 1: window 객체에 함수 등록**
+// **수정 사항 1: window 객체 타입 선언 (동일)**
 declare global {
     interface Window {
         startPiPayment: () => void;
@@ -11,7 +13,7 @@ declare global {
 }
 
 export default function Home() {
-    // **수정 사항 2: Script 태그 내부의 함수를 window 객체에 할당**
+    
     const piScript = `
         Pi.init({ version: "2.0", sandbox: true });
 
@@ -26,29 +28,32 @@ export default function Home() {
                 },
                 onReadyForServerCompletion: function(paymentId, txid) {
                     alert("결제 완료!");
+                    // **결제 성공 시 최종적으로 10단계가 완료됩니다.**
                 },
                 onCancel: function(paymentId) {
                     alert("결제가 취소되었습니다.");
                 },
                 onError: function(error, payment) {
-                    alert("결제 오류 발생: " + error.message);
+                    alert("결제 오류 발생: " + error.message + "\\n버튼이 활성화되지 않았다면 이 창을 닫고 다시 시도하세요.");
                 }
             });
         };
 
         window.authenticateUser = function() {
             Pi.authenticate(["username"], function(auth) {
+                // **인증 성공 시:**
                 document.getElementById("status").innerText = "Pi 사용자: " + auth.user.username + "로 로그인됨.";
                 document.getElementById("payButton").disabled = false;
             }).catch(function(error) {
-                document.getElementById("status").innerText = "Pi 인증 실패: " + error.message;
+                // **인증 실패 시 (강제 활성화):**
+                document.getElementById("status").innerText = "Pi 인증 실패 (결제 테스트 강제 활성화): " + error.message;
+                document.getElementById("payButton").disabled = false; // **<<-- 이 부분을 추가/확인합니다.**
             });
         };
 
         window.onload = window.authenticateUser;
     `;
     
-    // **수정 사항 3: onClick 핸들러 변경**
     return (
         <div style={{ textAlign: 'center', marginTop: '100px' }}>
             <Script src="https://sdk.minepi.com/pi-sdk.js" strategy="beforeInteractive" />
@@ -59,7 +64,7 @@ export default function Home() {
 
             <button
                 id="payButton"
-                onClick={() => window.startPiPayment()} // **window.startPiPayment()로 변경**
+                onClick={() => window.startPiPayment()}
                 style={{ padding: '15px 30px', fontSize: '20px', backgroundColor: '#AB5E90', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}
                 disabled
             >
