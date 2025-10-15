@@ -1,4 +1,7 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 🚨 OFFICIAL HACKATHON SUBMISSION DEMO (READ FIRST)
+**VIDEO LINK (Required for Review):** [Final Demo Video](https://youtube.com/shorts/MZc4rrD3VR4?feature=share)
+**NOTE:** The video demonstrates Pi Browser technical errors (403/404) but confirms functional Pi SDK code.
+---This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
